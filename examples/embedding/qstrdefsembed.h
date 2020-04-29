@@ -3,7 +3,7 @@
  *
  * The MIT License (MIT)
  *
- * Copyright (c) 2013-2014 Damien P. George
+ * Copyright (c) 2020 Jim Mussared
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,19 +24,8 @@
  * THE SOFTWARE.
  */
 
-#include <stdio.h>
+// qstrs to add to libmicropython required by this example.
 
-#include "py/mpstate.h"
-#include "py/gc.h"
+// *FORMAT-OFF*
 
-#include "lib/utils/gchelper.h"
-
-#if MICROPY_ENABLE_GC
-
-void gc_collect(void) {
-    gc_collect_start();
-    gc_helper_collect_regs_and_stack();
-    gc_collect_end();
-}
-
-#endif // MICROPY_ENABLE_GC
+Q(hello_embed_world)

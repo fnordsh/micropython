@@ -151,6 +151,7 @@ LIB_SRC_C = $(addprefix lib/,\
 	utils/pyexec.c \
 	utils/interrupt_char.c \
 	utils/sys_stdio_mphal.c \
+	utils/gchelper_cortexm.c \
 	utils/mpirq.c \
 	)
 

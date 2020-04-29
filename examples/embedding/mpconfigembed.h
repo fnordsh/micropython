@@ -3,7 +3,7 @@
  *
  * The MIT License (MIT)
  *
- * Copyright (c) 2013-2014 Damien P. George
+ * Copyright (c) 2020 Jim Mussared
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,19 +24,10 @@
  * THE SOFTWARE.
  */
 
-#include <stdio.h>
+// Options to control how MicroPython is built.
 
-#include "py/mpstate.h"
-#include "py/gc.h"
+// Demo handler showing how to customise inline functionality that gets linked
+// into libmicropython.a.
+void shutdown_hook(void);
 
-#include "lib/utils/gchelper.h"
-
-#if MICROPY_ENABLE_GC
-
-void gc_collect(void) {
-    gc_collect_start();
-    gc_helper_collect_regs_and_stack();
-    gc_collect_end();
-}
-
-#endif // MICROPY_ENABLE_GC
+#define MICROPY_PORT_DEINIT_FUNC shutdown_hook()

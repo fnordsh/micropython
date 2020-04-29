@@ -3,7 +3,7 @@
  *
  * The MIT License (MIT)
  *
- * Copyright (c) 2013-2014 Damien P. George
+ * Copyright (c) 2020 Jim Mussared
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,19 +24,37 @@
  * THE SOFTWARE.
  */
 
-#include <stdio.h>
+#include <unistd.h>
 
-#include "py/mpstate.h"
+#include "py/compile.h"
 #include "py/gc.h"
+#include "py/runtime.h"
 
 #include "lib/utils/gchelper.h"
 
-#if MICROPY_ENABLE_GC
+// Stub implementation of port-specific functionality to simplify embedding on
+// ARM/x86/x64 platforms with STDOUT.
 
-void gc_collect(void) {
+// These are weak symbols, so an embedder can override as necessary.
+
+MP_WEAK void gc_collect(void) {
     gc_collect_start();
+
+    // Use gchelper implementation for this arch.
     gc_helper_collect_regs_and_stack();
+
+    // trace root pointers from any threads
+    #if MICROPY_PY_THREAD
+    mp_thread_gc_others();
+    #endif
+
     gc_collect_end();
 }
 
-#endif // MICROPY_ENABLE_GC
+MP_WEAK void mp_hal_stdout_tx_strn(const char *str, mp_uint_t len) {
+    write(STDOUT_FILENO, str, len);
+}
+
+MP_WEAK mp_import_stat_t mp_import_stat(const char *path) {
+    return MP_IMPORT_STAT_NO_EXIST;
+}
